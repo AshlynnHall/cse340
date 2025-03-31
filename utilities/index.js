@@ -57,6 +57,38 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+/* **************************************
+ * Build the item detail view HTML
+ * ************************************ */
+Util.buildItemView = async function (data) {
+  if (!data) {
+    return "<p>Item Detail is not available.</p>";
+  }
+  const make = data.inv_make;
+  const model = data.inv_model;
+  const year = data.inv_year;
+  const desc = data.inv_description;
+  const imgSm = data.inv_thumbnail;
+  const imgLg = data.inv_image;
+  const price = Number(data.inv_price).toLocaleString();
+  const miles = Number(data.inv_miles).toLocaleString();
+  const color = data.inv_color;
+
+  return `
+    <div id="item-display">
+      <img id="imgSm" src="${imgSm}" alt="${make} ${model}"/>
+      <img id="imgLg" src="${imgLg}" alt="${make} ${model}"/>
+      <div id="item-details">
+        <h2>${make} ${model} Details</h2>
+        <p><b>Price: $${price}</p></b>
+        <p><b>Description:</b> ${desc}</p>
+        <p><b>Color:</b> ${color}</p>
+        <p><b>Mileage:</b> ${miles}</p>
+        <p><b>Year:</b> ${year}</p>
+    </div>
+  `;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 
