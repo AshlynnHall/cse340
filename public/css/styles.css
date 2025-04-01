@@ -313,8 +313,8 @@ footer {
   grid-template-columns: 1fr;
   border: 3px solid lightslategray;
   border-radius: 5px;
-  background-color: rgb(26, 46, 82);
-  color: white;
+  background-color: white;
+  color: black;
   justify-self: center;
   margin-bottom: 20px;
 }
@@ -331,7 +331,7 @@ footer {
   width: 85%;
   min-height: 40px;
   justify-self: center;
-  border: 2px solid deepskyblue;
+  border: 2px solid black;
   padding: 5px;
   font-size: larger;
 }
@@ -350,7 +350,7 @@ footer {
   padding: 10px 30px;
   border-radius: 20px;
   text-transform: uppercase;
-  border: 2px solid deepskyblue;
+  border: 2px solid lightslategray;
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -359,7 +359,7 @@ footer {
   padding: 3px 6px;
   border-radius: 5px;
   border: .5px solid lightslategray;
-  background-color: deepskyblue;
+  background-color: lightblue;
   color: black;
   justify-self: center;
   margin-top: 5px;
@@ -375,7 +375,7 @@ footer {
 
 .form-frame a {
   text-decoration: underline;
-  color: white;
+  color: black;
   justify-self: center;
 }
 
