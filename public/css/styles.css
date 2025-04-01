@@ -7,7 +7,7 @@
 
 /******* baseController.js ******************************/
 .notice {
-  background-color: yellow;
+  background-color: lightgoldenrodyellow;
   border: 1px solid black;
   font-weight: bold;
   padding: 10px;
@@ -312,7 +312,7 @@ footer {
   display: grid;
   grid-template-columns: 1fr;
   border: 3px solid lightslategray;
-  border-radius: 5px;
+  border-radius: 0px;
   background-color: white;
   color: black;
   justify-self: center;
@@ -327,7 +327,7 @@ footer {
 }
 
 .form input, .form select, .form textarea {
-  border-radius: 5px;
+  border-radius: 0px;
   width: 85%;
   min-height: 40px;
   justify-self: center;
@@ -408,6 +408,24 @@ footer {
   font-weight: bold;
   margin-bottom: 10px;
   padding-top: 20px;
+}
+
+#inv_year,
+#inv_price,
+#inv_miles {
+  -moz-appearance: textfield; /* For Firefox */
+  -webkit-appearance: none;  /* For Chrome, Safari, Edge */
+  appearance: none;          /* Standard */
+}
+
+#inv_year::-webkit-inner-spin-button, 
+#inv_year::-webkit-outer-spin-button,
+#inv_price::-webkit-inner-spin-button, 
+#inv_price::-webkit-outer-spin-button,
+#inv_miles::-webkit-inner-spin-button, 
+#inv_miles::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Remove spin buttons in WebKit browsers */
+  margin: 0; /* Remove margin for consistency */
 }
 
 /********* table formatting *************/
