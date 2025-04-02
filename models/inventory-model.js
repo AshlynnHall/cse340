@@ -97,6 +97,19 @@ async function addNewInventory(
   }
 }
 
+/* ***************************
+ * Check if a classification exists
+ * ************************** */
+async function checkExistingClassification(classification_name) {
+  try {
+    const sql = "SELECT COUNT(*) FROM public.classification WHERE classification_name = $1";
+    const result = await pool.query(sql, [classification_name]);
+    return result.rows[0].count > 0; // Return true if classification exists
+  } catch (error) {
+    console.error("Error checking existing classification:", error);
+    throw error;
+  }
+}
 
 
-module.exports = {getClassifications, getInventoryByClassificationId, getItemByInvId, addNewClassification, addNewInventory};
+module.exports = {getClassifications, getInventoryByClassificationId, getItemByInvId, addNewClassification, addNewInventory, checkExistingClassification};
