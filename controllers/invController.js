@@ -70,13 +70,13 @@ invCont.processNewClassification = async function (req, res) {
   if (result) {
     req.flash(
       "notice",
-      `"${classification_name}" has been added successfully as a category!`
+      `${classification_name} has been added successfully as a category!`
     );
     res.redirect("/inv");
   } else {
     req.flash(
       "notice",
-      `Failed to add "${classification_name}". Please try again.`
+      `Failed to add ${classification_name}. Please try again.`
     );
     res.status(501).render("./inventory/add-classification", {
       title: "Add New Classification",
@@ -136,13 +136,13 @@ invCont.processNewInventory = async function (req, res) {
   if (result) {
     req.flash(
       "notice",
-      `The "${inv_year} ${inv_make} ${inv_model}" has been added successfully to the inventory!`
+      `The ${inv_year} ${inv_make} ${inv_model} has been added successfully to the inventory!`
     );
     res.redirect("/inv");
   } else {
     req.flash(
       "notice",
-      `Failed to add the "${inv_year} ${inv_make} ${inv_model}". Please try again.`
+      `Failed to add the ${inv_year} ${inv_make} ${inv_model}. Please try again.`
     );
 
     let classificationList = await utilities.buildClassificationList(
@@ -151,19 +151,28 @@ invCont.processNewInventory = async function (req, res) {
     res.status(501).render("./inventory/add-inventory", {
       title: "Add New Inventory Item",
       nav,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
+      locals: req.body, // Pass the entire form data for sticky form
       classificationList,
       errors: null,
     });
   }
 };
+
+// /***************************************************
+//  * Return Inventory by Classification as JSON
+//  ***************************************************/
+// invCont.getInventoryJSON = async (req, res, next) => {
+//   const classification_id = parseInt(req.params.classification_id);
+//   const invData = await invModel.getInventoryByClassificationId(
+//     classification_id
+//   );
+//   if (invData.length > 0 && invData[0].inv_id) {
+//     if (invData[0].inv_id) {
+//       return res.json(invData);
+//     } else {
+//       next(new Error("No data returned"));
+//     }
+//   }
+// };
 
 module.exports = invCont

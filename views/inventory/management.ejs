@@ -6,3 +6,7 @@
   <a href="/inv/add-classification">Add New Classification</a>
   <a href="/inv/add-inventory">Add New Inventory Item</a>
 </div>
+
+<% if (messages().success) { %>
+  <div class="success"><%= messages().success %></div>
+<% } %>
