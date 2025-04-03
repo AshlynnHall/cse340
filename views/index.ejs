@@ -1,5 +1,13 @@
 <h1>Welcome to CSE Motors!</h1>
-<%- messages() %>
+<% if (messages && Object.keys(messages).length > 0) { %>
+    <ul class="notice">
+      <% Object.keys(messages).forEach(type => { %>
+        <% messages[type].forEach(msg => { %>
+          <li class="<%= type %>"><%= msg %></li>
+        <% }) %>
+      <% }) %>
+    </ul>
+<% } %>
 <div class="figure">
     <div class="card">
         <h4>DMC Delorean</h4>

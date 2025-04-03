@@ -7,6 +7,12 @@
   <a href="/inv/add-inventory">Add New Inventory Item</a>
 </div>
 
-<% if (messages().success) { %>
-  <div class="success"><%= messages().success %></div>
+<% if (messages && Object.keys(messages).length > 0) { %>
+  <ul class="notice">
+    <% Object.keys(messages).forEach(type => { %>
+      <% messages[type].forEach(msg => { %>
+        <li class="<%= type %>"><%= msg %></li>
+      <% }) %>
+    <% }) %>
+  </ul>
 <% } %>

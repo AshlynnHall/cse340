@@ -4,6 +4,14 @@
     res.redirect("/")
 } %>
 
-<%# messages() %>
+<% if (messages && Object.keys(messages).length > 0) { %>
+    <ul class="notice">
+      <% Object.keys(messages).forEach(type => { %>
+        <% messages[type].forEach(msg => { %>
+          <li class="<%= type %>"><%= msg %></li>
+        <% }) %>
+      <% }) %>
+    </ul>
+<% } %>
 
 <%- details %>

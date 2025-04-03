@@ -1,9 +1,9 @@
-<% if (title) { %>
-    <h1 class="invTitle"><%= title %></h1>
-    <% } else {
-        res.redirect("/")
-    } %>
-    <div id="errorHero">
-        <p><%- message %></p>
-    </div>
-    
+<% if (messages && Object.keys(messages).length > 0) { %>
+    <ul class="notice">
+      <% Object.keys(messages).forEach(type => { %>
+        <% messages[type].forEach(msg => { %>
+          <li class="<%= type %>"><%= msg %></li>
+        <% }) %>
+      <% }) %>
+    </ul>
+<% } %>
