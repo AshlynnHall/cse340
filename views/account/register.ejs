@@ -1,14 +1,14 @@
 <h1 class="acctTitle"><%= title %></h1>
 
-<%- messages() %>
-
-<% if (errors) { %>
+<% if (messages && Object.keys(messages).length > 0) { %>
     <ul class="notice">
-   <% errors.array().forEach(error => { %>
-     <li><%= error.msg %></li>
-  <%  }) %>
-   </ul>
-  <% } %>
+      <% Object.keys(messages).forEach(type => { %>
+        <% messages[type].forEach(msg => { %>
+          <li class="<%= type %>"><%= msg %></li>
+        <% }) %>
+      <% }) %>
+    </ul>
+<% } %>
 
 <div class="form-frame">
     <form class="form" action="/account/register" method="post">

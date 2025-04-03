@@ -1,6 +1,7 @@
 const utilities = require("../utilities/");
 const accountModel = require("../models/account-model");
 const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs");
 require("dotenv").config()
 
 /* ****************************************
@@ -78,7 +79,7 @@ async function accountLogin(req, res) {
     return
   }
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
+    if (bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
       if(process.env.NODE_ENV === 'development') {

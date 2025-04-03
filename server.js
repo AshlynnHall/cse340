@@ -36,11 +36,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 // Express Messages Middleware
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
-  next()
-})
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = req.flash(); // Store flash messages as an object
+  next();
+});
 
 app.use(cookieParser())
 
