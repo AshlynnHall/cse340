@@ -59,7 +59,7 @@ router.post(
   utilities.handleErrors(invController.processNewInventory)
 );
 
-// GET route to show the form for editing an inventory item
+// Route to edit an inventory item form
 router.get("/edit/:invId", (req, res, next) => {
   next();
 }, utilities.handleErrors(invController.editInventoryView));
@@ -70,6 +70,17 @@ router.post(
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
+);
+
+// Route to delete an inventory item
+router.get("/delete/:invId", (req, res, next) => {
+  next();
+}, utilities.handleErrors(invController.deleteInventoryView));
+
+// Post delete inventory item
+router.post(
+  "/delete-confirm/", 
+  utilities.handleErrors(invController.deleteInventory)
 );
 
 module.exports = router;

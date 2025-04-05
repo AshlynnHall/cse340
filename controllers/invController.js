@@ -226,7 +226,7 @@ invCont.updateInventory = async function (req, res) {
   if (result) {
     req.flash(
       "notice",
-      `The ${inv_year} ${inv_make} ${inv_model} has been added successfully to the inventory!`
+      `The ${inv_year} ${inv_make} ${inv_model} has been updated successfully!`
     );
     res.redirect("/inv");
   } else {
@@ -260,5 +260,56 @@ invCont.getInventoryJSON = async (req, res, next) => {
     next(new Error("No data returned"))
   }
 }
+
+/* ***************************
+ *  Build delete inventory view
+ * ************************** */
+invCont.deleteInventoryView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.invId);
+  let nav = await utilities.getNav();
+  const itemData = await invModel.getItemByInvId(inv_id);
+  if (!itemData) {
+    req.flash("notice", "Inventory item not found.");
+    return res.redirect("/inv");
+  }
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+  res.render("./inventory/delete-confirm", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year
+  });
+};
+
+/* ***************************
+ *  Delete Inventory Item
+ * ************************** */
+invCont.deleteInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  const { inv_id } = req.body; // Extract only the inv_id from the request body
+
+  console.log("Deleting inventory item with ID:", inv_id); // Debugging statement
+
+  try {
+    const result = await invModel.deleteInventory(inv_id); // Call the model function with inv_id
+
+    console.log("Delete result:", result); // Debugging statement
+
+    if (result.rowCount > 0) {
+      req.flash("notice", "The inventory item has been successfully deleted!");
+      res.redirect("/inv"); // Redirect to the inventory management page
+    } else {
+      req.flash("notice", "Failed to delete the inventory item. Please try again.");
+      res.redirect("/inv"); // Redirect back to the inventory management page
+    }
+  } catch (error) {
+    console.error("Error deleting inventory item:", error); // Debugging statement
+    req.flash("notice", "An error occurred while trying to delete the inventory item.");
+    res.status(500).redirect("/inv"); // Redirect with an error status
+  }
+};
 
 module.exports = invCont;
