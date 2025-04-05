@@ -1,12 +1,5 @@
 <h1 class="mgmt"><%= title %></h1>
 
-<%- messages() %>
-
-<div class="menu-list">
-  <a href="/inv/add-classification">Add New Classification</a>
-  <a href="/inv/add-inventory">Add New Inventory Item</a>
-</div>
-
 <% if (messages && Object.keys(messages).length > 0) { %>
   <ul class="notice">
     <% Object.keys(messages).forEach(type => { %>
@@ -16,3 +9,20 @@
     <% }) %>
   </ul>
 <% } %>
+
+<div class="menu-list">
+  <a href="/inv/add-classification">Add New Classification</a>
+  <a href="/inv/add-inventory">Add New Inventory Item</a>
+</div>
+
+<h2>Manage Inventory</h2>
+
+<div class="content">
+  <p>Select a classification to view the inventory items:</p>
+
+  <%- classificationSelect %>
+  <table id="inventoryDisplay"></table>
+
+</div>
+<noscript>JavaScript must be enabled to use this page.</noscript>
+<script src="../../js/inventory.js"></script>

@@ -19,9 +19,14 @@ router.get(
 );
 
 // Route to build management view
-router.get(
-  "/",
-  utilities.handleErrors(invController.buildMgmt)
+router.get("/", (req, res, next) => {
+  console.log("Accessing /inv route");
+  next();
+}, utilities.handleErrors(invController.buildMgmt));
+
+// Route for classification list
+router.get("/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
 );
 
 // Route to build add-classification view
