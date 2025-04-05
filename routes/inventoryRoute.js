@@ -59,4 +59,17 @@ router.post(
   utilities.handleErrors(invController.processNewInventory)
 );
 
+// GET route to show the form for editing an inventory item
+router.get("/edit/:invId", (req, res, next) => {
+  next();
+}, utilities.handleErrors(invController.editInventoryView));
+
+// Post update inventory item
+router.post(
+  "/edit-inventory/", 
+  invValidate.inventoryRules(),
+  invValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+);
+
 module.exports = router;

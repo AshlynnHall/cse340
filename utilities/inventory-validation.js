@@ -100,27 +100,28 @@ invValidate.inventoryRules = () => {
       .trim()
       .notEmpty()
       .withMessage("File path is required")
-      .trim()
-      .notEmpty()
-      .withMessage("File path is required")
-      .matches(
-        /^\/images\/vehicles\/[a-zA-Z0-9_\-]+\.(jpeg|png|webp|avif|gif)$/
-      )
+      .matches(/^\/images\/vehicles\/[a-zA-Z0-9_\-]+\.(jpeg|png|webp|avif|gif|jpg)$/i)
       .withMessage(
-        'Picture path must begin "/images/vehicles/" and be a picture file [jpeg, png, gif, webp, avif]. Allowed special characters [_-].'
-      ),
+        'Picture path must begin "/images/vehicles/" and be a picture file [jpeg, png, gif, webp, avif, jpg]. Allowed special characters [_-].'
+      )
+      .custom((value) => {
+        console.log("Validating inv_image:", value); // Debugging statement
+        return true;
+      }),
     // Thumbnail
     // required
     body("inv_thumbnail")
       .trim()
       .notEmpty()
       .withMessage("File path is required")
-      .matches(
-        /^\/images\/vehicles\/[a-zA-Z0-9_\-]+\.(jpeg|png|webp|avif|gif)$/
-      )
+      .matches(/^\/images\/vehicles\/[a-zA-Z0-9_\-]+\.(jpeg|png|webp|avif|gif|jpg)$/i)
       .withMessage(
-        'Small picture path must begin "/images/vehicles/" and be a picture file [jpeg, png, gif, webp, avif]. Allowed special characters [_-].'
-      ),
+        'Small picture path must begin "/images/vehicles/" and be a picture file [jpeg, png, gif, webp, avif, jpg]. Allowed special characters [_-].'
+      )
+      .custom((value) => {
+        console.log("Validating inv_thumbnail:", value); // Debugging statement
+        return true;
+      }),
     // Price
     // must be a number
     body("inv_price")
@@ -186,6 +187,54 @@ invValidate.checkInventoryData = async (req, res, next) => {
     res.render("./inventory/add-inventory", {
         errors: errors.array(),
         title: "Add New Inventory Item",
+        nav,
+        inv_make,
+        inv_model,
+        inv_year,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        inv_price,
+        inv_miles,
+        inv_color,
+        classificationList,
+    });
+    return;
+  }
+  next();
+};
+
+/*******************************************************************
+ * check & return error or continue to edit-inventory item
+ ********************************************************************/
+invValidate.checkUpdateData = async (req, res, next) => {
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+
+  console.log("Validation errors:", errors.array()); // Debugging statement
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    let classificationList = await utilities.buildClassificationList(
+        classification_id
+    );
+    res.render("./inventory/edit-inventory", {
+        errors: errors.array(),
+        title: "Edit Inventory Item",
+        inv_id,
         nav,
         inv_make,
         inv_model,

@@ -159,6 +159,96 @@ invCont.processNewInventory = async function (req, res) {
 };
 
 /* ***************************
+ *  Build edit inventory view
+ * ************************** */
+invCont.editInventoryView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.invId);
+  let nav = await utilities.getNav();
+  const itemData = await invModel.getItemByInvId(inv_id);
+  if (!itemData) {
+    req.flash("notice", "Inventory item not found.");
+    return res.redirect("/inv");
+  }
+  const classificationList = await utilities.buildClassificationList(itemData.classification_id); // Corrected variable name
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+  res.render("./inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationList, // Pass the dropdown list to the view
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year,
+    inv_description: itemData.inv_description,
+    inv_image: itemData.inv_image,
+    inv_thumbnail: itemData.inv_thumbnail,
+    inv_price: itemData.inv_price,
+    inv_miles: itemData.inv_miles,
+    inv_color: itemData.inv_color,
+    classification_id: itemData.classification_id,
+  });
+};
+
+/* ***************************
+ *  Update Inventory Item
+ * ************************** */
+invCont.updateInventory = async function (req, res) {
+  let nav = await utilities.getNav();
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+
+  const result = await invModel.updateInventory(
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+  );
+
+  if (result) {
+    req.flash(
+      "notice",
+      `The ${inv_year} ${inv_make} ${inv_model} has been added successfully to the inventory!`
+    );
+    res.redirect("/inv");
+  } else {
+    req.flash(
+      "notice",
+      `Failed to add the ${inv_year} ${inv_make} ${inv_model}. Please try again.`
+    );
+
+    let classificationSelect = await utilities.buildClassificationList(
+      classification_id
+    );
+    res.status(501).render("./inventory/add-inventory", {
+      title: "Add New Inventory Item",
+      nav,
+      locals: req.body, // Pass the entire form data for sticky form
+      classificationSelect: classificationSelect,
+      errors: null,
+    });
+  }
+};
+
+/* ***************************
  *  Return Inventory by Classification As JSON
  * ************************** */
 invCont.getInventoryJSON = async (req, res, next) => {
@@ -171,4 +261,4 @@ invCont.getInventoryJSON = async (req, res, next) => {
   }
 }
 
-module.exports = invCont
+module.exports = invCont;

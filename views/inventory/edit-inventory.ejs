@@ -1,0 +1,91 @@
+<h1 class="edit-inventory"><%= title %></h1>
+
+<% if (messages && Object.keys(messages).length > 0) { %>
+    <ul class="notice">
+      <% Object.keys(messages).forEach(type => { %>
+        <% messages[type].forEach(msg => { %>
+          <li class="<%= type %>"><%= msg %></li>
+        <% }) %>
+      <% }) %>
+    </ul>
+<% } %>
+
+<div class="form-frame">
+    <form class="form" action="/inv/edit-inventory" method="POST" id="updateForm">
+        
+        <label for="classificationList">Classification:</label>
+            <%- classificationList %>
+        
+        <!-- Make -->
+        <label for="inv_make">Make:</label>
+        <input type="text" name="inv_make" id="inv_make" required 
+        value="<%= locals.inv_make || '' %>"
+        pattern="^[A-Za-z][A-Za-z0-9 \-]{1,}[A-Za-z]$"
+        title="Must be at least 3 characters (start & end with a letter)"
+        placeholder="Min of 3 letters">
+
+        <!-- Model -->
+        <label for="inv_model">Model:</label>
+        <input type="text" name="inv_model" id="inv_model" required 
+        value="<%= locals.inv_model || '' %>"
+        pattern="^[A-Za-z0-9.'+ \-]+$"
+        title="Must be at least 1 character"
+        placeholder="Min of 1 character">
+        
+        <!-- Year -->
+        <label for="inv_year">Year:</label>
+        <input type="number" step="1" min="1800" max="9999" name="inv_year" id="inv_year" required 
+        value="<%= locals.inv_year || '' %>"
+        title="Must be 4-digit year"
+        placeholder="4-digit year">
+        
+        <!-- Description -->
+        <label for="inv_description">Description:</label>
+        <textarea name="inv_description" id="inv_description" rows="8" required 
+        minlength="12" maxlength="250"
+        placeholder="Min 12 characters"
+        title="Must be at least 12 characters and no more than 250"><%= locals.inv_description %></textarea>
+        
+        <!-- Picture -->
+        <label for="inv_image">Picture:</label>
+        <input type="text" name="inv_image" id="inv_image" required
+        value="<%= locals.inv_image ? locals.inv_image : '/images/vehicles/no-image.png' %>" 
+        pattern="^/images/vehicles/[a-zA-Z0-9_\-]+\.(jpeg|jpg|png|webp|avif|gif)$"
+        title="Must be a picture file saved in the '/images/vehicles/' directory and cannot contain spaces. Dash and underscore are allowed.">
+        
+        <!-- Thumbnail -->
+        <label for="inv_thumbnail">Small Picture: </label>
+        <input type="text" name="inv_thumbnail" id="inv_thumbnail" required
+        value="<%= locals.inv_thumbnail ? locals.inv_thumbnail : '/images/vehicles/no-image-tn.png' %>" 
+        pattern="^/images/vehicles/[a-zA-Z0-9_\-]+\.(jpeg|jpg|png|webp|avif|gif)$"
+        title="Must be a picture file saved in the correct directory and cannot contain spaces. Dash and underscore are allowed.">
+        
+        <!-- Price -->
+        <label for="inv_price">Price:</label>
+        <input type="number" step="0.01" min="0" name="inv_price" id="inv_price" required 
+        value="<%= locals.inv_price %>"
+        title="Enter numbers (No comma or dollar sign)"
+        placeholder="Decimal or Integer">
+        
+        <!-- Miles -->
+        <label for="inv_miles">Miles:</label>
+        <input type="number" step="1" min="0" name="inv_miles" id="inv_miles" required 
+        value="<%= locals.inv_miles %>"
+        title="Enter only numbers (no special characters)"
+        placeholder="Integer only">
+        
+        <!-- Color -->
+        <label for="inv_color">Color:</label>
+        <input type="text" name="inv_color" id="inv_color" required 
+        value="<%= locals.inv_color %>"
+        pattern="^[A-Za-z][A-Za-z ]{1,}[A-Za-z]$"
+        title="Must be at least 3 letters (start & end with a letter)"
+        placeholder="At least 3 letters">
+        
+        <button type="submit" disabled>Update Vehicle</button>
+        <input type="hidden" name="inv_id"
+        <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+        <% } %>>
+    </form>
+    <script src="../../js/inv-update.js"></script>
+</div>

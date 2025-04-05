@@ -35,9 +35,10 @@ async function getItemByInvId(inv_id) {
       WHERE i.inv_id = $1`,
       [inv_id]
     );
-    return data.rows[0];
+    return data.rows[0]; // Return the first row (inventory item)
   } catch (error) {
     console.error("getItemByInvId error " + error);
+    throw error;
   }
 }
 
@@ -111,5 +112,55 @@ async function checkExistingClassification(classification_name) {
   }
 }
 
+/* ***************************
+ *  Update Inventory Item
+ * ************************** */
+async function updateInventory(
+  inv_id,
+  inv_make,
+  inv_model,
+  inv_year,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
+  try {
+    const sql = `
+      UPDATE public.inventory 
+      SET inv_make = $1, inv_model = $2, inv_year = $3, inv_description = $4, 
+          inv_image = $5, inv_thumbnail = $6, inv_price = $7, inv_miles = $8, 
+          inv_color = $9, classification_id = $10 
+      WHERE inv_id = $11 
+      RETURNING *;
+    `;
+    return await pool.query(sql, [
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+      inv_id
+    ]);
+  } catch (error) {
+    console.log(`addNewInventory error results... ${error}`); // for testing
+    return "Inventory Item could not be added.";
+  }
+}
 
-module.exports = {getClassifications, getInventoryByClassificationId, getItemByInvId, addNewClassification, addNewInventory, checkExistingClassification};
+module.exports = {
+  getClassifications, 
+  getInventoryByClassificationId, 
+  getItemByInvId, 
+  addNewClassification, 
+  addNewInventory, 
+  checkExistingClassification, 
+  updateInventory};
