@@ -34,7 +34,7 @@ router.post(
 router.get("/logout", (req, res) => {
   res.clearCookie("jwt"); // Clear the JWT cookie
   req.flash("notice", "You have successfully logged out.");
-  res.redirect("/account/login"); 
+  res.redirect("/"); 
 });
 
 // Route to build the update account view
@@ -48,6 +48,8 @@ router.get(
 router.post(
   "/update",
   utilities.checkLogin, 
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateAccountData,
   utilities.handleErrors(accountController.updateAccount)
 );
 
@@ -55,6 +57,8 @@ router.post(
 router.post(
   "/update-password",
   utilities.checkLogin, 
+  regValidate.updatePasswordRules(),
+  regValidate.checkUpdatePasswordData,
   utilities.handleErrors(accountController.updatePassword)
 );
 
