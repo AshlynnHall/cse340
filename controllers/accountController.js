@@ -129,4 +129,57 @@ async function accountManagement(req, res) {
   })
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, accountManagement }
+/* ****************************************
+ *  Deliver Update Account View
+ * ************************************ */
+async function buildUpdateAccount(req, res) {
+  let nav = await utilities.getNav();
+  const accountId = req.params.id; // Get the account ID from the route
+  const accountData = await accountModel.getAccountById(accountId); // Fetch account data
+  if (!accountData) {
+    req.flash("notice", "Account not found.");
+    return res.redirect("/account/");
+  }
+  res.render("account/update", {
+    title: "Update Account Information",
+    nav,
+    accountData,
+    errors: null,
+  });
+}
+
+/* ****************************************
+ *  Process Update Account Request
+ * ************************************ */
+async function updateAccount(req, res) {
+  console.log("Request body:", req.body); // Debugging statement
+  let nav = await utilities.getNav();
+  const { account_id, account_firstname, account_lastname, account_email } = req.body;
+
+  try {
+    const updatedAccount = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email);
+    if (updatedAccount) {
+      req.flash("notice", "Account information updated successfully.");
+      return res.redirect("/account/");
+    } else {
+      req.flash("notice", "Failed to update account information.");
+      res.status(500).render("account/update", {
+        title: "Update Account Information",
+        nav,
+        accountData: { account_id, account_firstname, account_lastname, account_email },
+        errors: null,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating account:", error); // Debugging statement
+    req.flash("notice", "An error occurred while updating the account.");
+    res.status(500).render("account/update", {
+      title: "Update Account Information",
+      nav,
+      accountData: { account_id, account_firstname, account_lastname, account_email },
+      errors: null,
+    });
+  }
+}
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, accountManagement, buildUpdateAccount, updateAccount }

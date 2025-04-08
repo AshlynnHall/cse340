@@ -34,7 +34,21 @@ router.post(
 router.get("/logout", (req, res) => {
   res.clearCookie("jwt"); // Clear the JWT cookie
   req.flash("notice", "You have successfully logged out.");
-  res.redirect("/account/login"); // Redirect to the login page
+  res.redirect("/account/login"); 
 });
+
+// Route to build the update account view
+router.get(
+  "/update/:id",
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.buildUpdateAccount)
+);
+
+// Process account update
+router.post(
+  "/update",
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.updateAccount)
+);
 
 module.exports = router;
