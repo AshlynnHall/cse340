@@ -319,6 +319,11 @@ footer {
   margin-bottom: 20px;
 }
 
+.form-frame h2 {
+  justify-self: center;
+  text-align: center;
+}
+
 .form {
   display: grid;
   width: 50vw;

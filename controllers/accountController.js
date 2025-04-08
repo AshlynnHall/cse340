@@ -152,7 +152,6 @@ async function buildUpdateAccount(req, res) {
  *  Process Update Account Request
  * ************************************ */
 async function updateAccount(req, res) {
-  console.log("Request body:", req.body); // Debugging statement
   let nav = await utilities.getNav();
   const { account_id, account_firstname, account_lastname, account_email } = req.body;
 
@@ -171,7 +170,6 @@ async function updateAccount(req, res) {
       });
     }
   } catch (error) {
-    console.error("Error updating account:", error); // Debugging statement
     req.flash("notice", "An error occurred while updating the account.");
     res.status(500).render("account/update", {
       title: "Update Account Information",
@@ -182,4 +180,76 @@ async function updateAccount(req, res) {
   }
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, accountManagement, buildUpdateAccount, updateAccount }
+/* ****************************************
+ *  Process Password Update Request
+ * ************************************ */
+async function updatePassword(req, res) {
+  console.log("Request body:", req.body); // Debugging statement
+  let nav = await utilities.getNav();
+  const { account_id, current_password, new_password, confirm_password } = req.body;
+
+  // Check if new password and confirm password match
+  if (new_password !== confirm_password) {
+    req.flash("notice", "New password and confirmation do not match.");
+    return res.status(400).render("account/update", {
+      title: "Update Account Information",
+      nav,
+      accountData: { account_id },
+      errors: null,
+    });
+  }
+
+  try {
+    // Fetch the current account data
+    const accountData = await accountModel.getAccountById(account_id);
+    console.log("Fetched account data:", accountData); // Debugging statement
+    if (!accountData) {
+      req.flash("notice", "Account not found.");
+      return res.redirect("/account/");
+    }
+
+    // Verify the current password
+    const validPassword = await bcrypt.compare(current_password, accountData.account_password);
+    console.log("Password verification result:", validPassword); // Debugging statement
+    if (!validPassword) {
+      req.flash("notice", "Current password is incorrect.");
+      return res.status(400).render("account/update", {
+        title: "Update Account Information",
+        nav,
+        accountData: { account_id },
+        errors: null,
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    console.log("Hashed new password:", hashedPassword); // Debugging statement
+
+    // Update the password in the database
+    const updatedPassword = await accountModel.updatePassword(account_id, hashedPassword);
+    console.log("Password update result:", updatedPassword); // Debugging statement
+    if (updatedPassword) {
+      req.flash("notice", "Password updated successfully.");
+      return res.redirect("/account/");
+    } else {
+      req.flash("notice", "Failed to update password.");
+      return res.status(500).render("account/update", {
+        title: "Update Account Information",
+        nav,
+        accountData: { account_id },
+        errors: null,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating password:", error);
+    req.flash("notice", "An error occurred while updating the password.");
+    return res.status(500).render("account/update", {
+      title: "Update Account Information",
+      nav,
+      accountData: { account_id },
+      errors: null,
+    });
+  }
+}
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, accountManagement, buildUpdateAccount, updateAccount, updatePassword }

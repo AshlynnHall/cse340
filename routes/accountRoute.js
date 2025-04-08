@@ -51,4 +51,11 @@ router.post(
   utilities.handleErrors(accountController.updateAccount)
 );
 
+// Process password update
+router.post(
+  "/update-password",
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.updatePassword)
+);
+
 module.exports = router;

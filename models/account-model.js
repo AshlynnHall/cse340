@@ -32,7 +32,7 @@ async function getAccountByEmail (account_email) {
 async function getAccountById(account_id) {
   try {
     const result = await pool.query(
-      "SELECT account_id, account_firstname, account_lastname, account_email, account_type FROM account WHERE account_id = $1",
+      "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1",
       [account_id]
     );
     return result.rows[0];
@@ -53,15 +53,33 @@ async function updateAccount(account_id, account_firstname, account_lastname, ac
       WHERE account_id = $4
       RETURNING *;
     `;
-    console.log("SQL Query:", sql); // Debugging statement
-    console.log("Parameters:", account_firstname, account_lastname, account_email, account_id); // Debugging statement
     const result = await pool.query(sql, [account_firstname, account_lastname, account_email, account_id]);
     return result.rows[0];
   } catch (error) {
     console.error("Error updating account:", error);
-    console.error("Error updating account:", error); // Debugging statement
     throw error;
   }
 }
 
-module.exports = {registerAccount, getAccountByEmail, getAccountById, updateAccount};
+/* *****************************
+ * Update account password
+ * ***************************** */
+async function updatePassword(account_id, hashedPassword) {
+  try {
+    const sql = `
+      UPDATE account 
+      SET account_password = $1
+      WHERE account_id = $2
+      RETURNING *;
+    `;
+    console.log("SQL Query:", sql); // Debugging statement
+    console.log("Parameters:", hashedPassword, account_id); // Debugging statement
+    const result = await pool.query(sql, [hashedPassword, account_id]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw error;
+  }
+}
+
+module.exports = {registerAccount, getAccountByEmail, getAccountById, updateAccount, updatePassword};
