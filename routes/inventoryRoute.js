@@ -20,9 +20,8 @@ router.get(
 
 // Route to build management view
 router.get("/", (req, res, next) => {
-  console.log("Accessing /inv route");
   next();
-}, utilities.handleErrors(invController.buildMgmt));
+},utilities.checkAccountType, utilities.handleErrors(invController.buildMgmt));
 
 // Route for classification list
 router.get("/getInventory/:classification_id",
@@ -32,12 +31,14 @@ router.get("/getInventory/:classification_id",
 // Route to build add-classification view
 router.get(
   "/add-classification",
+  utilities.checkAccountType,
   utilities.handleErrors(invController.buildAddClassification)
 );
 
 // Route to post add-classification view
 router.post(
   "/add-classification",
+  utilities.checkAccountType,
   invValidate.classificationRules(),
   invValidate.checkClassificationData,
   utilities.handleErrors(invController.processNewClassification)
@@ -46,6 +47,7 @@ router.post(
 // Route to build add-inventory view
 router.get(
   "/add-inventory",
+  utilities.checkAccountType,
   invValidate.inventoryRules(),
   invValidate.checkInventoryData,
   utilities.handleErrors(invController.buildAddInventory)
@@ -54,6 +56,7 @@ router.get(
 // Route to post add-inventory view
 router.post(
   "/add-inventory",
+  utilities.checkAccountType,
   invValidate.inventoryRules(), // Validation rules middleware
   invValidate.checkInventoryData, // Validation check middleware
   utilities.handleErrors(invController.processNewInventory)
@@ -62,24 +65,29 @@ router.post(
 // Route to edit an inventory item form
 router.get("/edit/:invId", (req, res, next) => {
   next();
-}, utilities.handleErrors(invController.editInventoryView));
+},utilities.checkAccountType,
+ utilities.handleErrors(invController.editInventoryView)
+);
 
 // Post update inventory item
 router.post(
   "/edit-inventory/", 
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
+  utilities.checkAccountType,
   utilities.handleErrors(invController.updateInventory)
 );
 
 // Route to delete an inventory item
 router.get("/delete/:invId", (req, res, next) => {
   next();
-}, utilities.handleErrors(invController.deleteInventoryView));
+}, utilities.checkAccountType, 
+utilities.handleErrors(invController.deleteInventoryView));
 
 // Post delete inventory item
 router.post(
   "/delete-confirm/", 
+  utilities.checkAccountType,
   utilities.handleErrors(invController.deleteInventory)
 );
 

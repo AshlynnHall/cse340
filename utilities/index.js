@@ -126,21 +126,34 @@ Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
  *  Middleware for checking the JWT token
  * ************************************ */
 Util.checkJWTToken = (req, res, next) => {
-  const token = req.cookies.jwt
+  const token = req.cookies.jwt;
   if (!token) {
-    res.locals.loggedin = false
-    return next()
+    res.locals.loggedin = false;
+    return next();
   }
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    res.locals.accountData = decoded
-    res.locals.loggedin = true
-    next()
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    res.locals.accountData = decoded; // Set accountData in res.locals
+    res.locals.loggedin = true;
+    next();
   } catch (err) {
-    res.locals.loggedin = false
-    next()
+    res.locals.loggedin = false;
+    next();
   }
-}
+};
+
+/* ****************************************
+ * Middleware to check account type
+ * Only allows "Employee" or "Admin" access
+ **************************************** */
+Util.checkAccountType = (req, res, next) => {
+  const accountData = res.locals.accountData; // Extract account data from JWT
+  if (!accountData || (accountData.account_type !== "Employee" && accountData.account_type !== "Admin")) {
+    req.flash("notice", "You do not have permission to access this resource.");
+    return res.redirect("/account/login"); // Redirect to login page
+  }
+  next(); // Allow access if account type is valid
+};
 
 /* ****************************************
  *  Check Login

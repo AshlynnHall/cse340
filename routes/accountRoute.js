@@ -30,4 +30,11 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 )
 
+// Logout route
+router.get("/logout", (req, res) => {
+  res.clearCookie("jwt"); // Clear the JWT cookie
+  req.flash("notice", "You have successfully logged out.");
+  res.redirect("/account/login"); // Redirect to the login page
+});
+
 module.exports = router;

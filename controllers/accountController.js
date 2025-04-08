@@ -103,15 +103,15 @@ async function accountLogin(req, res) {
       }
       return res.redirect("/account/")
     }
-    // else {
-    //   req.flash("message notice", "Please check your credentials and try again.")
-    //   res.status(400).render("account/login", {
-    //     title: "Login",
-    //     nav,
-    //     errors: null,
-    //     account_email,
-    //   })
-    // }
+    else {
+      req.flash("message notice", "Please check your credentials and try again.")
+      res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      })
+    }
   } catch (error) {
     throw new Error('Access Forbidden')
   }

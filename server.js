@@ -46,7 +46,7 @@ app.use(cookieParser())
 
 
 //Unit5 Login process activity
-app.use(utilities.checkJWTToken)
+app.use(utilities.checkJWTToken);
 
 /* ***********************
  * View Engine and Templates
